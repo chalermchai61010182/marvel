@@ -13,7 +13,7 @@ const contentStyleIcons = {
 
 function callback(key) {
   console.log(key);
-  console.log("test");
+  console.log("test1");
 }
 
 const MarvelTab = () => {
