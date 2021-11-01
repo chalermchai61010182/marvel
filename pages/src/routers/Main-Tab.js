@@ -2,6 +2,7 @@ import { Tabs } from "antd";
 import React from "react";
 import { UserOutlined, HomeOutlined, HeartOutlined } from "@ant-design/icons";
 import Carousel from "../routers/Main-Carousel";
+import Centermode from "./Main-CenterMode";
 
 const { TabPane } = Tabs;
 const contentStyle = { marginLeft: "2.5%" };
@@ -35,6 +36,7 @@ const MarvelTab = () => {
         >
           {" "}
           <Carousel />
+          <Centermode />
         </TabPane>
         <TabPane
           tab={
