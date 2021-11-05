@@ -6,7 +6,9 @@ import "antd/dist/antd.css";
 
 export default function App() {
   return (
-    <div>
+    <div
+      style={{ backgroundColor: "#ffffff" }} //สีแบคกราว
+    >
       <Tab />
     </div>
   );

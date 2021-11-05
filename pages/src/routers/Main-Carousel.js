@@ -1,147 +1,102 @@
 import { Carousel, Modal, message, Button, Space } from "antd";
 import React, { useState, useEffect } from "react";
-import { HeartOutlined } from "@ant-design/icons";
-import axios from "axios";
+import Image from "next/image";
 
 const contentStyle = {
   height: "500px",
-  width: "95%",
+  width: "99%",
   color: "#fff",
-  background: "#364d79",
-  marginLeft: "1%",
+  background: "#ffffff",
+
   border: "none",
 };
-var Data;
-const getAPI = async () => {
-  const API_GATEWAY = "https://gateway.marvel.com/v1/public/comics";
-  const ts = "0969690829";
-  const key = "71e2ecbf2f29260f04e2c7fadc0dc43a";
-  const hash = "1c0fc0f4d4ff09f45c21dae5f08a5d79";
-  // fetch('https://api.tvmaze.com/search/shows?q=batman')
-  // const data = await res.json()
-  const res = await fetch(`${API_GATEWAY}?ts=${ts}&apikey=${key}&hash=${hash}`);
-  const data = await res.json();
-  Data = data;
-};
-
-// function hadleDataEdit(index) {
-//   console.log(index);
-//   router.push(`../src/DataEdit?data=${index}`);
-// console.log(data.slice(0, i));
-// console.log(data.slice(index + 1));
-// }
 
 const MarvelCarousel = () => {
   useEffect(() => {
     getAPI();
-  }, []);
+  }, []); //จะทำเมื่อรีโหลดหน้า
 
+  var Data;
+  const getAPI = async () => {
+    const API_GATEWAY = "https://gateway.marvel.com/v1/public/comics";
+    const ts = "0969690829";
+    const key = "71e2ecbf2f29260f04e2c7fadc0dc43a";
+    const hash = "1c0fc0f4d4ff09f45c21dae5f08a5d79";
+    // fetch('https://api.tvmaze.com/search/shows?q=batman')
+    // const data = await res.json()
+    const res = await fetch(
+      `${API_GATEWAY}?ts=${ts}&apikey=${key}&hash=${hash}`
+    );
+    const data = await res.json();
+    setComicsData(data.data.results);
+    Data = data;
+    console.log(data);
+    console.log(data.data.results[9].images[0].path);
+    data.data.results.map((x) => {
+      console.log(x.images);
+    });
+  };
+
+  const myLoader = ({ src, width, quality }) => {
+    return `${src}?w=${width}&q=${quality || 75}`;
+  };
+
+  const [comicsData, setComicsData] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isModalVisibleone, setIsModalVisibleone] = useState(false);
-  const [isModalVisibletwo, setIsModalVisibletwo] = useState(false);
-  const [isModalVisiblethree, setIsModalVisiblethree] = useState(false);
 
-  const showModal = () => {
-    setIsModalVisible(true);
-  };
-  const showModalone = () => {
-    setIsModalVisibleone(true);
-  };
-  const showModaltwo = () => {
-    setIsModalVisibletwo(true);
-  };
-
-  const showModalthree = () => {
-    setIsModalVisiblethree(true);
-  };
+  function info(item) {
+    Modal.info({
+      title: item.title,
+      content: (
+        <div>
+          <p></p>
+        </div>
+      ),
+    });
+  }
 
   const handleOk = () => {
     setIsModalVisible(false);
-    setIsModalVisibleone(false);
-    setIsModalVisibletwo(false);
-    setIsModalVisiblethree(false);
-    message.success("Add to favorites");
   };
 
   const handleCancel = () => {
     setIsModalVisible(false);
-    setIsModalVisibleone(false);
-    setIsModalVisibletwo(false);
-    setIsModalVisiblethree(false);
   };
 
   return (
     <Carousel autoplay>
-      <div>
-        <Button onClick={showModal} key="1" style={contentStyle}>
-          {" "}
-        </Button>
-        <Modal
-          title="1"
-          visible={isModalVisible}
-          onOk={handleOk}
-          onCancel={handleCancel}
-          okText="Add to favorites"
-          cancelText="Cancel"
-        ></Modal>
-      </div>
-      <div>
-        <Button onClick={showModalone} key="2" style={contentStyle}>
-          {" "}
-        </Button>
-        <Modal
-          title="2"
-          visible={isModalVisibleone}
-          onOk={handleOk}
-          onCancel={handleCancel}
-          okText="Add to favorites"
-          cancelText="Cancel"
-        >
-          <p>Some contents...</p>
-        </Modal>
-      </div>
-      <div>
-        <Button onClick={showModaltwo} key="3" style={contentStyle}>
-          {" "}
-        </Button>
-        <Modal
-          title="3"
-          visible={isModalVisibletwo}
-          onOk={handleOk}
-          onCancel={handleCancel}
-          okText="Add to favorites"
-          cancelText="Cancel"
-        >
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-        </Modal>
-      </div>
-      <div>
-        <Button onClick={showModalthree} key="4" style={contentStyle}>
-          {" "}
-        </Button>
-        <Modal
-          title="4"
-          visible={isModalVisiblethree}
-          onOk={handleOk}
-          onCancel={handleCancel}
-          okText="Add to favorites"
-          cancelText="Cancel"
-        >
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-        </Modal>
-      </div>
+      {comicsData &&
+        comicsData.map((item, index) => (
+          <div>
+            <Button
+              onClick={() => {
+                info(item);
+              }}
+              style={contentStyle}
+            >
+              {" "}
+              <Image
+                loader={myLoader}
+                src={
+                  item?.images[0]?.path + ".jpg" ||
+                  "http://i.annihil.us/u/prod/marvel/i/mg/d/70/4bc69c7e9b9d7.jpg"
+                }
+                alt="Picture of the author" //ชื่อ
+                width={330}
+                height={500}
+              />
+            </Button>
+            <Modal
+              title={item.title}
+              visible={isModalVisible}
+              onOk={handleOk}
+              onCancel={handleCancel}
+              okText="Add to favorites"
+              cancelText="Cancel"
+            ></Modal>
+            {/* <p>{item.title}</p> */}
+          </div>
+        ))}
     </Carousel>
   );
 };

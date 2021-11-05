@@ -2,14 +2,17 @@ import { Tabs } from "antd";
 import React from "react";
 import { UserOutlined, HomeOutlined, HeartOutlined } from "@ant-design/icons";
 import Carousel from "../routers/Main-Carousel";
-import Centermode from "./Main-CenterMode";
+import Carouselcomics from "../routers/Main-Carouselcomics";
+import Carouselshow from "../routers/Main-Carouselshow";
+import { HomeWrapper } from "./style";
 
 const { TabPane } = Tabs;
-const contentStyle = { marginLeft: "2.5%" };
+const contentStyle = { marginLeft: "2.5%", marginRight: "2.5%" };
 const contentStyleIcons = {
   marginRight: "5px",
   marginLeft: "5px",
   fontSize: "20px",
+  color: "#000000", //สีไอคอน
 };
 
 function callback(key) {
@@ -35,8 +38,8 @@ const MarvelTab = () => {
           key="1"
         >
           {" "}
-          <Carousel />
-          <Centermode />
+          <Carouselshow />
+          <Carouselcomics />
         </TabPane>
         <TabPane
           tab={
