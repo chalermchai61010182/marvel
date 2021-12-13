@@ -4,7 +4,7 @@ import Slider from "react-slick";
 import { Modal, Button, Col } from "antd";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { ContainerOutlined } from "@ant-design/icons";
+import { ContainerOutlined, HeartOutlined } from "@ant-design/icons";
 
 const contentStyle = {
   height: "100%",
@@ -34,7 +34,7 @@ const NowPlaying = () => {
 
   var Data;
   const getAPI = async () => {
-    const API_GATEWAY = "https://gateway.marvel.com/v1/public/comics";
+    const API_GATEWAY = "https://gateway.marvel.com/v1/public/characters";
     const ts = "0969690829";
     const key = "71e2ecbf2f29260f04e2c7fadc0dc43a";
     const hash = "1c0fc0f4d4ff09f45c21dae5f08a5d79";
@@ -44,7 +44,9 @@ const NowPlaying = () => {
       `${API_GATEWAY}?ts=${ts}&apikey=${key}&hash=${hash}`
     );
     const data = await res.json();
+    console.log(data);
     setComicsData(data.data.results);
+    console.log(comicsData);
     Data = data;
     // console.log(data);
     // console.log(data.data.results[9].images[0].path);
@@ -59,13 +61,15 @@ const NowPlaying = () => {
 
   const [comicsData, setComicsData] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+
   const { confirm } = Modal;
   function info(item) {
+    console.log(item.description);
     confirm({
-      title: item.title,
+      title: item.name,
+      content: item.description,
       icon: <ContainerOutlined />,
-      content: "",
-      okText: "Add to favorites",
+      okText: <HeartOutlined />,
       okType: "danger",
       cancelText: "Cancel",
 
@@ -96,7 +100,7 @@ const NowPlaying = () => {
           color: "#000000",
         }}
       >
-        Marvel-Comics
+        Marvel-Characters
       </h4>
       <Slider {...settings}>
         {comicsData &&
@@ -112,8 +116,8 @@ const NowPlaying = () => {
                 <Image
                   loader={myLoader}
                   src={
-                    item?.images[0]?.path + ".jpg" ||
-                    "http://i.annihil.us/u/prod/marvel/i/mg/d/70/4bc69c7e9b9d7.jpg"
+                    item?.thumbnail.path + ".jpg" ||
+                    "http://i.annihil.us/u/prod/marvel/i/mg/c/e0/535fecbbb9784.jpg"
                   }
                   alt="Picture of the author" //ชื่อ
                   width={530}
@@ -121,7 +125,7 @@ const NowPlaying = () => {
                 />
               </Button>
               <Modal title={item.title} visible={isModalVisible}></Modal>
-              <p>{item.title}</p>
+              <p>{item.name}</p>
             </div>
           ))}
       </Slider>

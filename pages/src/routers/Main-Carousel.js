@@ -30,8 +30,8 @@ const MarvelCarousel = () => {
     const data = await res.json();
     setComicsData(data.data.results);
     Data = data;
-    console.log(data);
-    console.log(data.data.results[9].images[0].path);
+    // console.log(data);
+    // console.log(data.data.results[9].images[0].path);
     data.data.results.map((x) => {
       console.log(x.images);
     });

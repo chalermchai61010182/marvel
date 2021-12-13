@@ -5,7 +5,8 @@ import { Modal, Button, Col } from "antd";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { ContainerOutlined } from "@ant-design/icons";
-
+import { sendFav, deleteFav } from "../firebase/setDatafirebase";
+// import style from "../../../styles/Home.module.css";
 const contentStyle = {
   height: "100%",
   width: "100%",
@@ -14,7 +15,15 @@ const contentStyle = {
   border: "none",
 };
 
-const NowPlaying = () => {
+const alreadyFav = {
+  background: "red", //สีแบคกราว
+  color: "white",
+  border: "none",
+};
+
+const NowPlaying = (props) => {
+  const { favouriteItems } = props;
+
   const settings = {
     dots: false,
     infinite: true,
@@ -30,6 +39,8 @@ const NowPlaying = () => {
   }, []); //จะทำเมื่อรีโหลดหน้า
 
   var Data;
+  console.log(Data);
+
   const getAPI = async () => {
     const API_GATEWAY = "https://gateway.marvel.com/v1/public/comics";
     const ts = "0969690829";
@@ -44,9 +55,9 @@ const NowPlaying = () => {
     setComicsData(data.data.results);
     Data = data;
     console.log(data);
-    console.log(data.data.results[9].images[0].path);
+    // console.log(data.data.results[9].images[0].path);
     data.data.results.map((x) => {
-      console.log(x.images);
+      // console.log(x.images);
     });
   };
 
@@ -59,27 +70,39 @@ const NowPlaying = () => {
 
   const { confirm } = Modal;
   function info(item) {
+    const isItemFavourite = isFavourite(item);
+
     confirm({
       title: item.title,
       icon: <ContainerOutlined />,
-      content: "",
-      okText: "Add to favorites",
+      content: item.textObjects[0]?.text,
+      okButtonProps: isItemFavourite ? { style: alreadyFav } : {},
+      okText: isItemFavourite ? "Remove from favourite" : "Add to favorites",
       okType: "danger",
       cancelText: "Cancel",
 
-      onOk() {
+      async onOk() {
         console.log("OK");
+        if (isItemFavourite) await deleteFav(item);
+        else await sendFav(item);
+
+        await props.initData();
+        // console.log(item);
       },
+
       onCancel() {
         console.log("Cancel");
       },
     });
   }
 
+  const isFavourite = ({ title }) =>
+    favouriteItems.find((item) => item.title === title)?.title;
+
   return (
     <Col>
       <h4 style={{ marginLeft: "5%", fontSize: "20px", color: "#000000" }}>
-        Recommend
+        Marvel-Comics
       </h4>
       <Slider {...settings}>
         {comicsData &&
@@ -95,7 +118,7 @@ const NowPlaying = () => {
                 <Image
                   loader={myLoader}
                   src={
-                    item?.images[0]?.path + ".jpg" ||
+                    item?.thumbnail.path + ".jpg" ||
                     "http://i.annihil.us/u/prod/marvel/i/mg/d/70/4bc69c7e9b9d7.jpg"
                   }
                   alt="Picture of the author" //ชื่อ
@@ -103,15 +126,16 @@ const NowPlaying = () => {
                   height={700}
                 />
               </Button>
-              <Modal
-                title={item.title}
-                visible={isModalVisible}
-                // onOk={handleOk}
-                // onCancel={handleCancel}
-                // okText="Add to favorites"
-                // cancelText="Cancel"
-              ></Modal>
-              {/* <p>{item.title}</p> */}
+              <Modal title={item.title} visible={isModalVisible}></Modal>
+              <p id="title">{item.title}</p>
+              <style jsx>{`
+                p#title {
+                  text-overflow: ellipsis;
+                  overflow: hidden;
+                  width: 95%;
+                  white-space: nowrap;
+                }
+              `}</style>
             </div>
           ))}
       </Slider>
