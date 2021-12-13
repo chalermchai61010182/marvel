@@ -5,8 +5,7 @@ import { Modal, Button, Col } from "antd";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { ContainerOutlined } from "@ant-design/icons";
-import { sendFav, deleteFav } from "../firebase/setDatafirebase";
-// import style from "../../../styles/Home.module.css";
+import { sendFav, deleteFav } from "../../../firebase/setDatafirebase";
 const contentStyle = {
   height: "100%",
   width: "100%",

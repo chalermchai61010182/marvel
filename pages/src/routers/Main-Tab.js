@@ -1,19 +1,14 @@
 import { Tabs } from "antd";
 import { UserOutlined, HomeOutlined, HeartOutlined } from "@ant-design/icons";
-import Carousel from "../routers/Main-Carousel";
-import Carouselcomics from "../routers/Main-Carouselcomics";
 import Characters from "./Main-Carouselcharacters";
 import Carouselshow from "../routers/Main-Carouselshow";
-import { HomeWrapper } from "./style";
 import {
   allMyFav,
-  testGet,
   allMyFavCharacters,
   allMyFavSeries,
-} from "../firebase/setDatafirebase";
+} from "../../../firebase/setDatafirebase";
 import React, { useEffect, useState } from "react";
 import Series from "../routers/Main-Series";
-import Favourtie from "../screens/Favourite";
 import Profile from "./Profile";
 import MainFavourtie from "../screens/Main-Favourite";
 import Favseries from "../screens/Main-Favouriteseries";

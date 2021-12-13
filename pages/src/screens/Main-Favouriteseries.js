@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Row, Typography, List, Card } from "antd";
-import { deleteFavSeries } from "../firebase/setDatafirebase";
+import { deleteFavSeries } from "../../../firebase/setDatafirebase";
 import Image from "next/image";
 
 const { Title } = Typography;

@@ -5,7 +5,10 @@ import { Modal, Button, Col } from "antd";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { ContainerOutlined } from "@ant-design/icons";
-import { sendFavSeries, deleteFavSeries } from "../firebase/setDatafirebase";
+import {
+  sendFavSeries,
+  deleteFavSeries,
+} from "../../../firebase/setDatafirebase";
 
 const contentStyle = {
   height: "100%",

@@ -8,7 +8,7 @@ import { ContainerOutlined } from "@ant-design/icons";
 import {
   sendFavCharacters,
   deleteFavCharacter,
-} from "../firebase/setDatafirebase";
+} from "../../../firebase/setDatafirebase";
 // import style from "../../../styles/Home.module.css";
 const contentStyle = {
   height: "100%",

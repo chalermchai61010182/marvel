@@ -1,4 +1,4 @@
-import { Carousel, Modal, message, Button, Space } from "antd";
+import { Carousel, Modal, Button } from "antd";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 
@@ -43,6 +43,7 @@ const MarvelCarousel = () => {
 
   const [comicsData, setComicsData] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const test = "";
 
   function info(item) {
     Modal.info({
