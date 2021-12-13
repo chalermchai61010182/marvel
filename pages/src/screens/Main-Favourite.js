@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, Row, Typography, List, Card } from "antd";
 import { deleteFav } from "../firebase/setDatafirebase";
+import Image from "next/image";
 
 const { Title } = Typography;
 const myLoader = ({ src, width, quality }) => {
@@ -9,7 +10,6 @@ const myLoader = ({ src, width, quality }) => {
 
 const Favourite = (props) => {
   const { favouriteItems, initData } = props;
-  console.log(favouriteItems);
 
   return (
     <div>
@@ -22,20 +22,17 @@ const Favourite = (props) => {
         renderItem={(item) => (
           <List.Item>
             <Card title={item.title} level={2}>
-              {/* <Image
+              <Image
                 loader={myLoader}
                 src={
                   item?.thumbnail.path + ".jpg" ||
                   "http://i.annihil.us/u/prod/marvel/i/mg/d/70/4bc69c7e9b9d7.jpg"
                 }
                 alt="Picture of the author" //ชื่อ
-                width={530}
-                height={700}
-              /> */}
-              <p>{item.thumbnail.path}</p>
-            </Card>
-
-            <Card>
+                width="250%"
+                height="300%"
+              />
+              <p></p>
               <Button
                 type="danger"
                 onClick={async () => {
@@ -43,7 +40,7 @@ const Favourite = (props) => {
                   initData();
                 }}
               >
-                ลบ
+                Delete
               </Button>
             </Card>
           </List.Item>

@@ -23,7 +23,6 @@ const alreadyFav = {
 
 const NowPlaying = (props) => {
   const { favouriteItems } = props;
-
   const settings = {
     dots: false,
     infinite: true,
@@ -40,7 +39,6 @@ const NowPlaying = (props) => {
 
   var Data;
   console.log(Data);
-
   const getAPI = async () => {
     const API_GATEWAY = "https://gateway.marvel.com/v1/public/comics";
     const ts = "0969690829";
@@ -54,7 +52,7 @@ const NowPlaying = (props) => {
     const data = await res.json();
     setComicsData(data.data.results);
     Data = data;
-    console.log(data);
+    // console.log(data);
     // console.log(data.data.results[9].images[0].path);
     data.data.results.map((x) => {
       // console.log(x.images);
@@ -74,8 +72,8 @@ const NowPlaying = (props) => {
 
     confirm({
       title: item.title,
-      icon: <ContainerOutlined />,
       content: item.textObjects[0]?.text,
+      icon: <ContainerOutlined />,
       okButtonProps: isItemFavourite ? { style: alreadyFav } : {},
       okText: isItemFavourite ? "Remove from favourite" : "Add to favorites",
       okType: "danger",

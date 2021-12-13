@@ -62,7 +62,8 @@ const NowPlaying = () => {
   const { confirm } = Modal;
   function info(item) {
     confirm({
-      title: item.title,
+      title: item.name,
+      content: item.description,
       icon: <ContainerOutlined />,
       content: "",
       okText: "Add to favorites",

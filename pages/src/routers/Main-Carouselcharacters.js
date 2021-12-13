@@ -4,8 +4,12 @@ import Slider from "react-slick";
 import { Modal, Button, Col } from "antd";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { ContainerOutlined, HeartOutlined } from "@ant-design/icons";
-
+import { ContainerOutlined } from "@ant-design/icons";
+import {
+  sendFavCharacters,
+  deleteFavCharacter,
+} from "../firebase/setDatafirebase";
+// import style from "../../../styles/Home.module.css";
 const contentStyle = {
   height: "100%",
   width: "100%",
@@ -14,7 +18,15 @@ const contentStyle = {
   border: "none",
 };
 
-const NowPlaying = () => {
+const alreadyFav = {
+  background: "red", //สีแบคกราว
+  color: "white",
+  border: "none",
+};
+
+const NowPlaying = (props) => {
+  console.log(props);
+  const { favouriteItemsCharacters, initData } = props;
   const settings = {
     dots: false,
     infinite: true,
@@ -33,6 +45,7 @@ const NowPlaying = () => {
   }, []); //จะทำเมื่อรีโหลดหน้า
 
   var Data;
+  console.log(Data);
   const getAPI = async () => {
     const API_GATEWAY = "https://gateway.marvel.com/v1/public/characters";
     const ts = "0969690829";
@@ -44,7 +57,6 @@ const NowPlaying = () => {
       `${API_GATEWAY}?ts=${ts}&apikey=${key}&hash=${hash}`
     );
     const data = await res.json();
-    console.log(data);
     setComicsData(data.data.results);
     console.log(comicsData);
     Data = data;
@@ -64,31 +76,36 @@ const NowPlaying = () => {
 
   const { confirm } = Modal;
   function info(item) {
-    console.log(item.description);
+    const isItemFavouriteCharacters = isFavouriteCharacters(item);
+
     confirm({
       title: item.name,
       content: item.description,
       icon: <ContainerOutlined />,
-      okText: <HeartOutlined />,
+      okButtonProps: isItemFavouriteCharacters ? { style: alreadyFav } : {},
+      okText: isItemFavouriteCharacters
+        ? "Remove from favourite"
+        : "Add to favorites",
       okType: "danger",
       cancelText: "Cancel",
 
-      onOk() {
+      async onOk() {
         console.log("OK");
+        if (isItemFavouriteCharacters) await deleteFavCharacter(item);
+        else await sendFavCharacters(item);
+
+        await initData();
+        console.log(item);
       },
+
       onCancel() {
         console.log("Cancel");
       },
     });
   }
 
-  const handleOk = () => {
-    setIsModalVisible(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalVisible(false);
-  };
+  const isFavouriteCharacters = ({ name }) =>
+    favouriteItemsCharacters.find((item) => item.name === name)?.name;
 
   return (
     <Col>
@@ -125,7 +142,15 @@ const NowPlaying = () => {
                 />
               </Button>
               <Modal title={item.title} visible={isModalVisible}></Modal>
-              <p>{item.name}</p>
+              <p id="title">{item.title}</p>
+              <style jsx>{`
+                p#title {
+                  text-overflow: ellipsis;
+                  overflow: hidden;
+                  width: 95%;
+                  white-space: nowrap;
+                }
+              `}</style>
             </div>
           ))}
       </Slider>

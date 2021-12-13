@@ -4,13 +4,20 @@ import Slider from "react-slick";
 import { Modal, Button, Col } from "antd";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { ContainerOutlined, HeartOutlined } from "@ant-design/icons";
+import { ContainerOutlined } from "@ant-design/icons";
+import { sendFavSeries, deleteFavSeries } from "../firebase/setDatafirebase";
 
 const contentStyle = {
   height: "100%",
   width: "100%",
   color: "#fff",
   background: "#f0f0f0", //สีแบคกราว
+  border: "none",
+};
+
+const alreadyFav = {
+  background: "red", //สีแบคกราว
+  color: "white",
   border: "none",
 };
 
@@ -23,13 +30,14 @@ const cutText = {
   // white-space: "nowrap",
 };
 
-const NowPlaying = () => {
+const NowPlaying = (props) => {
+  const { favouriteItemsSeries, initData } = props;
   const settings = {
     dots: false,
     infinite: true,
     slidesToShow: 2,
     slidesToScroll: 1,
-    autoplay: true,
+    autoplay: false,
     speed: 1000,
     autoplaySpeed: 500,
     cssEase: "linear",
@@ -73,7 +81,8 @@ const NowPlaying = () => {
 
   const { confirm } = Modal;
   function info(item) {
-    console.log(item.description);
+    const isItemFavouriteSeries = isFavouriteSeries(item);
+
     confirm({
       title: item.title,
       content:
@@ -84,26 +93,30 @@ const NowPlaying = () => {
           " and ended in " +
           item.endYear.toString(),
       icon: <ContainerOutlined />,
-      okText: <HeartOutlined />,
+      okButtonProps: isItemFavouriteSeries ? { style: alreadyFav } : {},
+      okText: isItemFavouriteSeries
+        ? "Remove from favourite"
+        : "Add to favorites",
       okType: "danger",
       cancelText: "Cancel",
 
-      onOk() {
+      async onOk() {
         console.log("OK");
+        if (isItemFavouriteSeries) await deleteFavSeries(item);
+        else await sendFavSeries(item);
+
+        await initData();
+        // console.log(item);
       },
+
       onCancel() {
         console.log("Cancel");
       },
     });
   }
 
-  const handleOk = () => {
-    setIsModalVisible(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalVisible(false);
-  };
+  const isFavouriteSeries = ({ title }) =>
+    favouriteItemsSeries.find((item) => item.title === title)?.title;
 
   return (
     <Col>

@@ -11,7 +11,7 @@ const Profile = (props) => {
   return (
     <div>
       <h4 style={{ marginLeft: "23%", fontSize: "20px", color: "#000000" }}>
-        Line accout name : {userProfile.userInfo.displayName}
+        Line account name : {userProfile.userInfo.displayName}
       </h4>
 
       <img

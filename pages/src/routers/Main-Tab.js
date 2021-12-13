@@ -5,7 +5,12 @@ import Carouselcomics from "../routers/Main-Carouselcomics";
 import Characters from "./Main-Carouselcharacters";
 import Carouselshow from "../routers/Main-Carouselshow";
 import { HomeWrapper } from "./style";
-import { allMyFav, testGet } from "../firebase/setDatafirebase";
+import {
+  allMyFav,
+  testGet,
+  allMyFavCharacters,
+  allMyFavSeries,
+} from "../firebase/setDatafirebase";
 import React, { useEffect, useState } from "react";
 import Series from "../routers/Main-Series";
 import Favourtie from "../screens/Favourite";
@@ -13,6 +18,7 @@ import Profile from "./Profile";
 import MainFavourtie from "../screens/Main-Favourite";
 import Favseries from "../screens/Main-Favouriteseries";
 import Favcha from "../screens/Main-Favouritecharac";
+
 // import liff from "@line/liff/dist/lib";
 // import Profile from "../routers/Profile";
 
@@ -39,12 +45,27 @@ const MarvelTab = () => {
   // const [data, setData] = useState(allMyFav(localStorage.getItem("UserId")));
   const [fav, setFav] = useState([]);
   const [fav1, setFav1] = useState();
+  const [fav2, setFav2] = useState();
+  const [fav3, setFav3] = useState();
+  const [fav4, setFav4] = useState();
+
   const [userInfo, setUserInfo] = useState();
   const initData = async () => {
     setFav(allMyFav(window.localStorage.getItem("UserId")));
     const favFirestore = await allMyFav(window.localStorage.getItem("UserId"));
     setFav1(favFirestore);
-    console.log("Pls>>", favFirestore);
+
+    const favFirestoreCharacters = await allMyFavCharacters(
+      window.localStorage.getItem("UserId")
+    );
+    setFav2(favFirestoreCharacters);
+
+    const favFirestoreSeries = await allMyFavSeries(
+      window.localStorage.getItem("UserId")
+    );
+    setFav3(favFirestoreSeries);
+
+    console.log("PlsSe>>", favFirestoreSeries);
   };
   const initProfile = async () => {
     const getUserInfo = await JSON.parse(localStorage.getItem("UserInfo"));
@@ -56,6 +77,7 @@ const MarvelTab = () => {
     initProfile();
   }, []); //รีเฟรสข้อมูลไม่เกิดเออเร่อ
 
+  console.log(fav2);
   return (
     <div style={{ marginTop: "2%" }}>
       <Tabs
@@ -74,8 +96,11 @@ const MarvelTab = () => {
         >
           {" "}
           <Carouselshow initData={initData} favouriteItems={fav1 || []} />
-          <Characters />
-          <Series />
+          <Characters
+            initData={initData}
+            favouriteItemsCharacters={fav2 || []}
+          />
+          <Series initData={initData} favouriteItemsSeries={fav3 || []} />
         </TabPane>
         <TabPane
           tab={
@@ -86,9 +111,10 @@ const MarvelTab = () => {
           key="2"
         >
           {/* <Favourtie initData={initData} favouriteItems={fav1 || []} /> */}
+          {/* <MainFavourtie initData={initData} favouriteItems={fav1 || []} /> */}
           <MainFavourtie initData={initData} favouriteItems={fav1 || []} />
-          <Favcha initData={initData} favouriteItems={fav1 || []} />
-          <Favseries initData={initData} favouriteItems={fav1 || []} />
+          <Favcha initData={initData} favouriteItemsCharacters={fav2 || []} />
+          <Favseries initData={initData} favouriteItemsSeries={fav3 || []} />
         </TabPane>
         <TabPane
           tab={

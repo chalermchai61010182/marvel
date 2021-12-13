@@ -72,6 +72,52 @@ export const sendFav = async (favoriteData) => {
   //   console.log(Favdata);
 };
 
+export const sendFavCharacters = async (favoriteData) => {
+  const saveFav = async (value) => {
+    console.log(value.id); // 270
+    const docRef = doc(db, "favoriteData", localStorage.getItem("UserId")); //doc(db, "collection", "document target");
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      console.log("Document data:", docSnap.data());
+      await updateDoc(docRef, {
+        userFavCharacters: arrayUnion(value),
+      });
+    } else {
+      // doc.data() will be undefined in this case
+      console.log("No such document!");
+      await setDoc(docRef, {
+        userFavCharacters: [value],
+      });
+    }
+  };
+  await saveFav(favoriteData);
+  //   console.log(Favdata);
+};
+
+export const sendFavSeries = async (favoriteData) => {
+  const saveFav = async (value) => {
+    console.log(value.id); // 270
+    const docRef = doc(db, "favoriteData", localStorage.getItem("UserId")); //doc(db, "collection", "document target");
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      console.log("Document data:", docSnap.data());
+      await updateDoc(docRef, {
+        sendFavSeries: arrayUnion(value),
+      });
+    } else {
+      // doc.data() will be undefined in this case
+      console.log("No such document!");
+      await setDoc(docRef, {
+        sendFavSeries: [value],
+      });
+    }
+  };
+  await saveFav(favoriteData);
+  //   console.log(Favdata);
+};
+
 export const allMyFav = async (userID) => {
   const citiesRef = collection(db, "favoriteData");
   const querySnapshot = await getDocs(citiesRef);
@@ -88,9 +134,45 @@ export const allMyFav = async (userID) => {
   return c;
 };
 
+export const allMyFavCharacters = async (userID) => {
+  const citiesRef = collection(db, "favoriteData");
+  const querySnapshot = await getDocs(citiesRef);
+  let c = [];
+
+  querySnapshot.forEach((doc) => {
+    const userFavObj = doc.data().userFavCharacters;
+    // console.log("userfavvvvv", userFavObj);
+    userFavObj.map((item) => {
+      c.push(item);
+    });
+  });
+  console.log(c);
+  return c;
+};
+
 export const testGet = () => {
   return true;
 };
+
+export const allMyFavSeries = async (userID) => {
+  const citiesRef = collection(db, "favoriteData");
+  const querySnapshot = await getDocs(citiesRef);
+  let c = [];
+
+  querySnapshot.forEach((doc) => {
+    const userFavObj = doc.data().sendFavSeries;
+    // console.log("userfavvvvv", userFavObj);
+    userFavObj.map((item) => {
+      c.push(item);
+    });
+  });
+  console.log(c);
+  return c;
+};
+
+// export const testGet = () => {
+//   return true;
+// };
 //   let c = [];
 //   try {
 //     const citiesRef = collection(db, "favoriteData");
@@ -121,6 +203,37 @@ export const deleteFav = async (item) => {
     favItems.splice(index, 1);
 
     await setDoc(docRef, { userFav: favItems }, { merge: true });
+  }
+};
+
+export const deleteFavCharacter = async (item) => {
+  const docRef = doc(db, "favoriteData", localStorage.getItem("UserId")); //doc(db, "collection", "document target");
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    const favItems = [...docSnap.data()?.userFavCharacters];
+    const index = favItems.findIndex(
+      (itemOrigin) => itemOrigin.name === item.name
+    );
+    favItems.splice(index, 1);
+
+    await setDoc(docRef, { userFavCharacters: favItems }, { merge: true });
+  }
+};
+
+export const deleteFavSeries = async (item) => {
+  const docRef = doc(db, "favoriteData", localStorage.getItem("UserId")); //doc(db, "collection", "document target");
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    const favItems = [...docSnap.data()?.sendFavSeries];
+    const index = favItems.findIndex(
+      (itemOrigin) => itemOrigin.title === item.title
+    );
+    favItems.splice(index, 1);
+    console.log("favitem ", favItems);
+
+    await setDoc(docRef, { sendFavSeries: favItems }, { merge: true });
   }
 };
 
