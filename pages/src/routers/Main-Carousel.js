@@ -43,6 +43,7 @@ const MarvelCarousel = () => {
 
   const [comicsData, setComicsData] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const test = "";
 
   function info(item) {
     Modal.info({
